@@ -6,9 +6,7 @@ Application::Application() {
     device = std::make_unique<VulkanDevice>(*window);
 }
 
-Application::~Application() {
-
-}
+Application::~Application() {}
 
 void Application::run() {
     mainLoop();

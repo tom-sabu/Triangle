@@ -17,7 +17,7 @@ public:
     void pollEvents();
     GLFWwindow* getGLFWWindow() const { return window; }
     int getWidth() const { return width; }
-    int gitHeight() const { return height; }
+    int getHeight() const { return height; }
 
 private:
     GLFWwindow* window;
