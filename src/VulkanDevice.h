@@ -22,7 +22,19 @@ private:
     VkInstance instance;
     Window& window;
 
+    // validation layer
+    const std::vector<const char*> validationLayers = {
+        "VK_LAYER_KHRONOS_validation"
+    };
+
+    #ifdef NDEBUG
+        const bool enableValidationLayers = false;
+    #else
+        const bool enableValidationLayers = true;
+    #endif
+
     void createInstance();
+    bool checkValidationLayerSupport();
     bool checkExtensionSupport(
         const char** requiredExtensions,
         uint32_t requiredCount,
