@@ -1,4 +1,5 @@
 #include "VulkanDevice.h"
+#include "ValidationLayers.h"
 #include "Window.h"
 #include <cstring>
 #include <iostream>
@@ -17,7 +18,7 @@ VulkanDevice::~VulkanDevice() {
 
 void VulkanDevice::createInstance() {
 
-  if (enableValidationLayers && !checkValidationLayerSupport()) {
+  if (ValidationLayers::enable && !ValidationLayers::checkSupport()) {
     throw std::runtime_error("Validation layers requested, but not available!");
   }
 
@@ -65,10 +66,10 @@ void VulkanDevice::createInstance() {
       static_cast<uint32_t>(requiredExtensions.size());
   createInfo.ppEnabledExtensionNames = requiredExtensions.data();
 
-  if (enableValidationLayers) {
+  if (ValidationLayers::enable) {
     createInfo.enabledLayerCount =
-        static_cast<uint32_t>(validationLayers.size());
-    createInfo.ppEnabledLayerNames = validationLayers.data();
+        static_cast<uint32_t>(ValidationLayers::validationLayers.size());
+    createInfo.ppEnabledLayerNames = ValidationLayers::validationLayers.data();
     std::cout << "Validation layers enabled\n" << std::endl;
   } else {
     createInfo.enabledLayerCount = 0;
@@ -78,39 +79,6 @@ void VulkanDevice::createInstance() {
   if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
     throw std::runtime_error("Failed to create Vulkan instance!");
   }
-}
-
-// checking if requested validation layers are available
-bool VulkanDevice::checkValidationLayerSupport() {
-  uint32_t layerCount;
-  vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
-
-  std::vector<VkLayerProperties> availableLayers(layerCount);
-  vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
-
-  std::cout << "Available validation layers:\n";
-  for (const auto &layer : availableLayers) {
-    std::cout << '\t' << layer.layerName << '\n';
-  }
-
-  // checking if all requested layers are available
-  for (const auto &layerName : validationLayers) {
-    bool layerFound = false;
-
-    for (const auto &layerProperties : availableLayers) {
-      if (strcmp(layerName, layerProperties.layerName) == 0) {
-        layerFound = true;
-        break;
-      }
-    }
-
-    if (!layerFound) {
-      std::cerr << "Missing validation layer: " << layerName << std::endl;
-      return false;
-    }
-  }
-
-  return true;
 }
 
 // checking if all required extensions are available

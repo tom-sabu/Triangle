@@ -11,6 +11,7 @@ set(SOURCE
     src/main.cpp
     src/Application.cpp
     src/Window.cpp
+    src/ValidationLayers.cpp
     src/VulkanDevice.cpp
 )
 
