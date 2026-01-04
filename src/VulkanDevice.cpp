@@ -106,10 +106,13 @@ bool VulkanDevice::checkExtensionSupport(
 // getting the list of required extensions from GLFW
 std::vector<const char *> VulkanDevice::getRequiredExtensions() {
   uint32_t glfwExtensionCount = 0;
-  const char **glfwExtensions =
-      glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+  const char **glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
-  std::vector<const char *> extensions(glfwExtensions,
-                                       glfwExtensions + glfwExtensionCount);
+  std::vector<const char *> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+
+  if (ValidationLayers::enable) {
+    extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+  }
+
   return extensions;
 }

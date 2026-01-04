@@ -1,37 +1,28 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
-PROJECT_ROOT=$(dirname $(dirname $(realpath $0)))
-REAL_SRC="$PROJECT_ROOT/src"
-AI_SRC="$PROJECT_ROOT/ai/src"
+echo "🔍 Showing AI changes vs real src/:"
+git diff --no-index src ai/src || true
 
-echo "=== AI Patch Applicator ==="
-echo "Real Source: $REAL_SRC"
-echo "AI Source:   $AI_SRC"
-echo ""
-
-# Check if there are differences
-if diff -r -q "$REAL_SRC" "$AI_SRC" >/dev/null; then
-    echo "No changes detected between ai/src/ and src/."
+echo
+read -p "Apply these AI patches to real src/? (y/N): " yn
+if [[ "$yn" != "y" && "$yn" != "Y" ]]; then
+    echo "❌ Cancelled."
     exit 0
 fi
 
-echo "The following files have changes:"
-diff -r -q "$REAL_SRC" "$AI_SRC" | grep "differ" || true
-echo ""
+echo "📦 Applying patches..."
+rsync -av --delete ai/src/ src/
 
-# Show unified diff
-echo "=== DIFF PREVIEW ==="
-diff -r -u "$REAL_SRC" "$AI_SRC" --color=always || true
-echo "===================="
-echo ""
+git status --short
 
-read -p "Do you want to apply these changes to the real src/ directory? [y/N] " response
-if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-    echo "Applying changes..."
-    # Copy files from AI_SRC to REAL_SRC
-    cp -r "$AI_SRC/"* "$REAL_SRC/"
-    echo "Changes applied successfully!"
+read -p "Commit these changes to git? (y/N): " yn
+if [[ "$yn" == "y" || "$yn" == "Y" ]]; then
+    git add src
+    git commit -m "AI patch: applied changes"
+    git push
+    echo "✅ AI patch committed."
 else
-    echo "Operation cancelled. No changes made."
+    echo "⚠ Changes applied but NOT committed."
 fi
+
