@@ -1,4 +1,6 @@
 # Build directories
+ai/**
+build/**
 build/
 cmake-build-*/
 out/
@@ -32,3 +34,6 @@ tags
 # OS files
 .DS_Store
 Thumbs.db
+
+# Experimental workspace
+experimental_playground/
