@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/home/tom/projects/vulkan/triangle/build",
+  "command": "/usr/bin/g++  -I/home/tom/projects/vulkan/triangle/src -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/VulkanTriangle.dir/src/Application.cpp.o -c /home/tom/projects/vulkan/triangle/src/Application.cpp",
+  "file": "/home/tom/projects/vulkan/triangle/src/Application.cpp",
+  "output": "CMakeFiles/VulkanTriangle.dir/src/Application.cpp.o"
+},
+{
+  "directory": "/home/tom/projects/vulkan/triangle/build",
+  "command": "/usr/bin/g++  -I/home/tom/projects/vulkan/triangle/src -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/VulkanTriangle.dir/src/ValidationLayers.cpp.o -c /home/tom/projects/vulkan/triangle/src/ValidationLayers.cpp",
+  "file": "/home/tom/projects/vulkan/triangle/src/ValidationLayers.cpp",
+  "output": "CMakeFiles/VulkanTriangle.dir/src/ValidationLayers.cpp.o"
+},
+{
+  "directory": "/home/tom/projects/vulkan/triangle/build",
+  "command": "/usr/bin/g++  -I/home/tom/projects/vulkan/triangle/src -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/VulkanTriangle.dir/src/VulkanDevice.cpp.o -c /home/tom/projects/vulkan/triangle/src/VulkanDevice.cpp",
+  "file": "/home/tom/projects/vulkan/triangle/src/VulkanDevice.cpp",
+  "output": "CMakeFiles/VulkanTriangle.dir/src/VulkanDevice.cpp.o"
+},
+{
+  "directory": "/home/tom/projects/vulkan/triangle/build",
+  "command": "/usr/bin/g++  -I/home/tom/projects/vulkan/triangle/src -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/VulkanTriangle.dir/src/Window.cpp.o -c /home/tom/projects/vulkan/triangle/src/Window.cpp",
+  "file": "/home/tom/projects/vulkan/triangle/src/Window.cpp",
+  "output": "CMakeFiles/VulkanTriangle.dir/src/Window.cpp.o"
+},
+{
+  "directory": "/home/tom/projects/vulkan/triangle/build",
+  "command": "/usr/bin/g++  -I/home/tom/projects/vulkan/triangle/src -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/VulkanTriangle.dir/src/main.cpp.o -c /home/tom/projects/vulkan/triangle/src/main.cpp",
+  "file": "/home/tom/projects/vulkan/triangle/src/main.cpp",
+  "output": "CMakeFiles/VulkanTriangle.dir/src/main.cpp.o"
+}
+]

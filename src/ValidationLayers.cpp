@@ -30,6 +30,7 @@ bool ValidationLayers::checkSupport() {
         
         if (!layerFound) {
             std::cerr << "Missing validation layer: " << layerName << std::endl;
+            return false;
         }
     }
 
