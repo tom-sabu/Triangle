@@ -1,25 +1,25 @@
 #ifndef APPLICATION_H
-
 #define APPLICATION_H
-#include "Window.h"
+
 #include "VulkanDevice.h"
+#include "Window.h"
 #include <memory>
 
 class Application {
 public:
-    Application();
-    ~Application();
+  Application();
+  ~Application();
 
-    void run();
+  void run();
 
 private:
-    static constexpr int WIDTH = 800;
-    static constexpr int HEIGHT = 600;
+  static constexpr int WIDTH = 800;
+  static constexpr int HEIGHT = 600;
 
-    std::unique_ptr<Window> window;
-    std::unique_ptr<VulkanDevice> device;
+  std::unique_ptr<Window> window;
+  std::unique_ptr<VulkanDevice> device;
 
-    void mainLoop();
+  void mainLoop();
 };
 
 #endif

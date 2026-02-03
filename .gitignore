@@ -1,8 +1,8 @@
 # Build directories
-ai/**
+
 build/**
 build/
-cmake-build-*/
+
 out/
 
 # CMake generated files
@@ -12,6 +12,8 @@ cmake_install.cmake
 Makefile
 *.cmake
 !CMakeLists.txt
+
+
 
 # Compiled binaries
 *.exe
@@ -35,5 +37,5 @@ tags
 .DS_Store
 Thumbs.db
 
-# Experimental workspace
-experimental_playground/
+
+.cache/
