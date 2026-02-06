@@ -20,9 +20,12 @@ public:
 
 private:
     VkInstance instance;
+    VkDebugUtilsMessengerEXT debugMessenger;
     Window& window;
 
     void createInstance();
+    void initVulkan();
+    void setupDebugMessenger();
     bool checkExtensionSupport(
         const char** requiredExtensions,
         uint32_t requiredCount,

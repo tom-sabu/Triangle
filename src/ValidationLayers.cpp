@@ -36,4 +36,3 @@ bool ValidationLayers::checkSupport() {
 
     return true;
 }
-
