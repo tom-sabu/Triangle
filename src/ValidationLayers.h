@@ -1,5 +1,5 @@
-#ifndef VLAIDATION_LAYER_H
-#define VLAIDATION_LAYER_H
+#ifndef VALIDATION_LAYER_H
+#define VALIDATION_LAYER_H
 
 #include <vector>
 #include <vulkan/vulkan.h>

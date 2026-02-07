@@ -26,6 +26,7 @@ private:
     void createInstance();
     void initVulkan();
     void setupDebugMessenger();
+    void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
     bool checkExtensionSupport(
         const char** requiredExtensions,
         uint32_t requiredCount,

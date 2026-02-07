@@ -33,7 +33,7 @@ void DestroyDebugUtilsMessengerEXT(VkInstance instance,
                                    VkDebugUtilsMessengerEXT debugMessenger,
                                    const VkAllocationCallbacks *pAllocator) {
   auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
-      instace, "vkDestroyDebugUtilsMessengerEXT");
+      instance, "vkDestroyDebugUtilsMessengerEXT");
   if (func != nullptr) {
     func(instance, debugMessenger, pAllocator);
   }
@@ -47,7 +47,7 @@ VulkanDevice::VulkanDevice(Window &window)
 VulkanDevice::~VulkanDevice() {
 
   if (ValidationLayers::enable) {
-    DestroyDebugUtilsMessenger(instance, debugMessenger, nullptr);
+    DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
   }
   if (instance != VK_NULL_HANDLE) {
     vkDestroyInstance(instance, nullptr);
@@ -66,7 +66,7 @@ void VulkanDevice::createInstance() {
   appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
   appInfo.pEngineName = "No Engine";
   appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-  appInfo.apiVersion = VK_API_VERSION_1_0;
+  appInfo.apiVersion = VK_API_VERSION_1_3;
 
   VkInstanceCreateInfo createInfo{};
   createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -124,21 +124,29 @@ void VulkanDevice::initVulkan() {
   setupDebugMessenger();
 }
 
-void VulkanDevice::setupDebugMessenger() {
-  if (!ValidationLayers::enable)
-    return;
-
-  VkDebugUtilsMessengerCreateInfoEXT createInfo{};
+void VulkanDevice::populateDebugMessengerCreateInfo(
+    VkDebugUtilsMessengerCreateInfoEXT &createInfo) {
+  createInfo = {};
   createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-  createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT;
+  createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
+                               VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+                               VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
   createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
                            VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
                            VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
   createInfo.pfnUserCallback = debugCallback;
   createInfo.pUserData = nullptr;
+}
 
-  if (CreateDebugUtilsMessengerEXT(instance, nullptr, &dubugMessenger) !=
-      VK_SUCCESS) {
+void VulkanDevice::setupDebugMessenger() {
+  if (!ValidationLayers::enable)
+    return;
+
+  VkDebugUtilsMessengerCreateInfoEXT createInfo;
+  populateDebugMessengerCreateInfo(createInfo);
+
+  if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr,
+                                   &debugMessenger) != VK_SUCCESS) {
     throw std::runtime_error("failed to set up debug messenger!");
   }
 }
