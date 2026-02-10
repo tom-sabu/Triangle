@@ -22,9 +22,12 @@ private:
     VkInstance instance;
     VkDebugUtilsMessengerEXT debugMessenger;
     Window& window;
+    VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
     void createInstance();
     void initVulkan();
+    void pickPhysicalDevice();
+    bool isDeviceSuitable(VkPhysicalDevice device);
     void setupDebugMessenger();
     void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
     bool checkExtensionSupport(
