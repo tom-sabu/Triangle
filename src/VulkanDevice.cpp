@@ -136,7 +136,7 @@ void VulkanDevice::pickPhysicalDevice() {
   std::vector<VkPhysicalDevice> devices(deviceCount);
   vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
-  for (const auto& device : devices) {
+  for (const auto &device : devices) {
     if (isDeviceSuitable(device)) {
       physicalDevice = device;
       break;
@@ -148,9 +148,7 @@ void VulkanDevice::pickPhysicalDevice() {
   }
 }
 
-bool VulkanDevice::isDeviceSuitable(VkPhysicalDevice device) {
-  return true;
-}
+bool VulkanDevice::isDeviceSuitable(VkPhysicalDevice device) { return true; }
 
 void VulkanDevice::populateDebugMessengerCreateInfo(
     VkDebugUtilsMessengerCreateInfoEXT &createInfo) {

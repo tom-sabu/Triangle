@@ -6,15 +6,15 @@
 
 class ValidationLayers {
 public:
-    static const std::vector<const char*> validationLayers;
+  static const std::vector<const char *> validationLayers;
 
-    #ifdef NDEBUG
-        static constexpr bool enable = false;
-    #else
-        static constexpr bool enable = true;
-    #endif
+#ifdef NDEBUG
+  static constexpr bool enable = false;
+#else
+  static constexpr bool enable = true;
+#endif
 
-    static bool checkSupport();
+  static bool checkSupport();
 };
 
 #endif

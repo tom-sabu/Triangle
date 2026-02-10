@@ -7,25 +7,25 @@
 
 class Window {
 public:
-    Window(int width, int height, const std::string& title);
-    ~Window();
+  Window(int width, int height, const std::string &title);
+  ~Window();
 
-    Window(const Window&) = delete;
-    Window& operator=(const Window&) = delete;
+  Window(const Window &) = delete;
+  Window &operator=(const Window &) = delete;
 
-    bool shouldClose() const;
-    void pollEvents();
-    GLFWwindow* getGLFWWindow() const { return window; }
-    int getWidth() const { return width; }
-    int getHeight() const { return height; }
+  bool shouldClose() const;
+  void pollEvents();
+  GLFWwindow *getGLFWWindow() const { return window; }
+  int getWidth() const { return width; }
+  int getHeight() const { return height; }
 
 private:
-    GLFWwindow* window;
-    int width;
-    int height;
-    std::string title;
-    
-    void initWindow();
+  GLFWwindow *window;
+  int width;
+  int height;
+  std::string title;
+
+  void initWindow();
 };
 
 #endif
