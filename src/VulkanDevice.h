@@ -27,7 +27,7 @@ private:
   void createInstance();
   void initVulkan();
   void pickPhysicalDevice();
-  bool isDeviceSuitable(VkPhysicalDevice device);
+  int rateDeviceSuitability(VkPhysicalDevice device);
   void setupDebugMessenger();
   void populateDebugMessengerCreateInfo(
       VkDebugUtilsMessengerCreateInfoEXT &createInfo);
