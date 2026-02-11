@@ -32,12 +32,16 @@ private:
   VkDebugUtilsMessengerEXT debugMessenger;
   Window &window;
   VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+  VkDevice device;
+    
+  }
 
   void createInstance();
   void initVulkan();
   void pickPhysicalDevice();
   QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
   int rateDeviceSuitability(VkPhysicalDevice device);
+  void createLogicalDevice();
   void setupDebugMessenger();
   void populateDebugMessengerCreateInfo(
       VkDebugUtilsMessengerCreateInfoEXT &createInfo);
