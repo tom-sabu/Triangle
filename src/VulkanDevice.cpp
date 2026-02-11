@@ -143,7 +143,37 @@ int VulkanDevice::rateDeviceSuitability(VkPhysicalDevice device) {
     return 0;
   }
 
+  QueueFamilyIndices indices = findQueueFamilies(device);
+  if (!indices.isComplete()) {
+    return 0;
+  }
+
   return score;
+}
+
+QueueFamilyIndices VulkanDevice::findQueueFamilies(VkPhysicalDevice device) {
+  QueueFamilyIndices indices;
+
+  uint32_t queueFamilyCount = 0;
+  vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+  std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+  vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+  int i = 0;
+  for (const auto& queueFamily : queueFamilies) {
+    if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+      indices.graphicsFamily = i;
+    }
+
+    if (indices.isComplete()) {
+      break;
+    }
+
+    i++;
+  }
+
+  return indices;
 }
 
 void VulkanDevice::pickPhysicalDevice() {
@@ -165,7 +195,7 @@ void VulkanDevice::pickPhysicalDevice() {
   }
 
   if (candidates.rbegin()->first > 0) {
-    physicalDevice = candidate.rbegin()->second;
+    physicalDevice = candidates.rbegin()->second;
   } else {
     throw std::runtime_error("failed to find a suitable GPU!");
   }

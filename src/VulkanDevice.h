@@ -5,6 +5,15 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include <vector>
+#include <optional>
+
+struct QueueFamilyIndices {
+  std::optional<uint32_t> graphicsFamily;
+
+  bool isComplete() {
+    return graphicsFamily.has_value();
+  }
+};
 
 class Window;
 
@@ -27,6 +36,7 @@ private:
   void createInstance();
   void initVulkan();
   void pickPhysicalDevice();
+  QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
   int rateDeviceSuitability(VkPhysicalDevice device);
   void setupDebugMessenger();
   void populateDebugMessengerCreateInfo(
