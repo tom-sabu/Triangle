@@ -52,6 +52,8 @@ VulkanDevice::~VulkanDevice() {
   if (instance != VK_NULL_HANDLE) {
     vkDestroyInstance(instance, nullptr);
   }
+
+  vkDestroyDevice(device, nullptr);
 }
 
 void VulkanDevice::createInstance() {
@@ -136,6 +138,31 @@ void VulkanDevice::createLogicalDevice() {
 
   float queuePriority = 1.0f;
   queueCreateInfo.pQueuePriorities = &queuePriority;
+
+  VkPhysicalDeviceFeatures deviceFeatures{};
+
+  VkDeviceCreateInfo createInfo{};
+  createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+
+  createInfo.pQueueCreateInfos = &queueCreateInfo;
+  createInfo.queueCreateInfoCount =1;
+
+  createInfo.pEnabledFeatures = &deviceFeatures;
+
+  createInfo.enableExtensionCount = 0;
+
+  if (ValidationLayers::enable) {
+    createInfo.enableLayerCount = static_cast<uint32_t>(ValidationLayers::validationLayers.size());
+    createInfo.ppEnabledLayerNames = ValidationLayers::validationLayers.data();
+  } else {
+    createInfo.enableLayerCount = 0;
+  }
+
+  if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) != VK_SUCCESS) {
+    throw std::runtime_error("failed to create logical device!"); 
+  }
+
+  vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
 }
 
 int VulkanDevice::rateDeviceSuitability(VkPhysicalDevice device) {

@@ -33,9 +33,9 @@ private:
   Window &window;
   VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
   VkDevice device;
-    
-  }
+  VkQueue graphicsQueue;
 
+  
   void createInstance();
   void initVulkan();
   void pickPhysicalDevice();
