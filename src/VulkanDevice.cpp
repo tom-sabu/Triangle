@@ -4,6 +4,7 @@
 #include <cstring>
 #include <iostream>
 #include <stdexcept>
+#include <map>
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL
 debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -46,14 +47,16 @@ VulkanDevice::VulkanDevice(Window &window)
 
 VulkanDevice::~VulkanDevice() {
 
+  vkDestroyDevice(device, nullptr);
+
   if (ValidationLayers::enable) {
     DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
   }
+
   if (instance != VK_NULL_HANDLE) {
     vkDestroyInstance(instance, nullptr);
   }
 
-  vkDestroyDevice(device, nullptr);
 }
 
 void VulkanDevice::createInstance() {
@@ -149,13 +152,13 @@ void VulkanDevice::createLogicalDevice() {
 
   createInfo.pEnabledFeatures = &deviceFeatures;
 
-  createInfo.enableExtensionCount = 0;
+  createInfo.enabledExtensionCount = 0;
 
   if (ValidationLayers::enable) {
-    createInfo.enableLayerCount = static_cast<uint32_t>(ValidationLayers::validationLayers.size());
+    createInfo.enabledLayerCount = static_cast<uint32_t>(ValidationLayers::validationLayers.size());
     createInfo.ppEnabledLayerNames = ValidationLayers::validationLayers.data();
   } else {
-    createInfo.enableLayerCount = 0;
+    createInfo.enabledLayerCount = 0;
   }
 
   if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) != VK_SUCCESS) {
