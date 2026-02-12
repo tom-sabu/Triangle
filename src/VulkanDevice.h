@@ -1,24 +1,29 @@
 #ifndef VULKAN_DEVICE_H
 
 #define VULKAN_DEVICE_H
+#define VK_USE_PLATFORM_WIN32_KHR
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
 #include <string>
 #include <vector>
 #include <optional>
 
-struct QueueFamilyIndices {
-  std::optional<uint32_t> graphicsFamily;
 
-  bool isComplete() {
-    return graphicsFamily.has_value();
-  }
-};
 
 class Window;
 
 class VulkanDevice {
 public:
+  struct QueueFamilyIndices {
+    std::optional<uint32_t> graphicsFamily;
+
+    bool isComplete() {
+      return graphicsFamily.has_value();
+    }
+  };
+
   VulkanDevice(Window &window);
   ~VulkanDevice();
 
@@ -30,25 +35,32 @@ public:
 private:
   VkInstance instance;
   VkDebugUtilsMessengerEXT debugMessenger;
-  Window &window;
+  VkSurfaceKHR surface;
   VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
   VkDevice device;
   VkQueue graphicsQueue;
 
-  
-  void createInstance();
+  Window &window;
+
   void initVulkan();
-  void pickPhysicalDevice();
-  QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
-  int rateDeviceSuitability(VkPhysicalDevice device);
-  void createLogicalDevice();
+  void createInstance();
   void setupDebugMessenger();
+
+  void createSurface();
+
+  void pickPhysicalDevice();
+  int rateDeviceSuitability(VkPhysicalDevice device);
+  QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
+
+  void createLogicalDevice();
+
   void populateDebugMessengerCreateInfo(
       VkDebugUtilsMessengerCreateInfoEXT &createInfo);
+
+  std::vector<const char *> getRequiredExtensions();
   bool checkExtensionSupport(
       const char **requiredExtensions, uint32_t requiredCount,
       const std::vector<VkExtensionProperties> &availableExtentions);
-  std::vector<const char *> getRequiredExtensions();
 };
 
 #endif
