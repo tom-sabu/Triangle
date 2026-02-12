@@ -219,6 +219,9 @@ VulkanDevice::QueueFamilyIndices VulkanDevice::findQueueFamilies(VkPhysicalDevic
       indices.graphicsFamily = i;
     }
 
+    Vkbool32 presentSupport = false;
+    VkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport)
+
     if (indices.isComplete()) {
       break;
     }
