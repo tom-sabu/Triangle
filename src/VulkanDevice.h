@@ -32,6 +32,9 @@ public:
 
 private:
   VkInstance instance;
+  const std::vector<const char*> deviceExtensions = {
+      VK_KHR_SWAPCHAIN_EXTENSION_NAME
+  };
   VkDebugUtilsMessengerEXT debugMessenger;
   VkSurfaceKHR surface;
   VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
@@ -49,6 +52,7 @@ private:
 
   void pickPhysicalDevice();
   int rateDeviceSuitability(VkPhysicalDevice device);
+  bool checkDeviceExtensionSupport(VkPhysicalDevice device);
   QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 
   void createLogicalDevice();

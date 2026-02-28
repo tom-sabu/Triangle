@@ -195,11 +195,30 @@ int VulkanDevice::rateDeviceSuitability(VkPhysicalDevice device) {
   }
 
   QueueFamilyIndices indices = findQueueFamilies(device);
-  if (!indices.isComplete()) {
+
+  bool extensionsSupported = checkDeviceExtensionSupport(device);
+
+  if (!indices.isComplete() || !extensionsSupported) {
     return 0;
   }
 
   return score;
+}
+
+bool VulkanDevice::checkDeviceExtensionSupport(VkPhysicalDevice device){
+  uint32_t extensionCount;
+  vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
+
+  std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+  vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
+
+  std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+
+  for (const auto& extension : availableExtensions) {
+    requiredExtensions.erase(extension.extensionName);
+  }
+
+  return requiredExtensions.empty();
 }
 
 VulkanDevice::QueueFamilyIndices VulkanDevice::findQueueFamilies(VkPhysicalDevice device) {
@@ -258,7 +277,8 @@ void VulkanDevice::createLogicalDevice() {
   createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
   createInfo.pQueueCreateInfos = queueCreateInfos.data();
   createInfo.pEnabledFeatures = &deviceFeatures;
-  createInfo.enabledExtensionCount = 0;
+  createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
+  createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
   if (ValidationLayers::enable) {
     createInfo.enabledLayerCount = static_cast<uint32_t>(ValidationLayers::validationLayers.size());
@@ -273,6 +293,7 @@ void VulkanDevice::createLogicalDevice() {
 
   vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
   vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
+
 }
 
 
