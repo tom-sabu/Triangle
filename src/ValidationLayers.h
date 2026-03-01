@@ -15,6 +15,14 @@ public:
 #endif
 
   static bool checkSupport();
+  static void populateMessengerCreateInfo(
+      VkDebugUtilsMessengerCreateInfoEXT &createInfo);
+
+  void setup(VkInstance instance);
+  void cleanup(VkInstance instance);
+
+private:
+  VkDebugUtilsMessengerEXT messenger = VK_NULL_HANDLE;
 };
 
 #endif

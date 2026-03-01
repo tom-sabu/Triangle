@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <optional>
+#include "ValidationLayers.h"
 
 
 
@@ -22,12 +23,6 @@ public:
     }
   };
 
-  struct SwapChainSupportDetails {
-    VkSurfaceCapabilitiesKHR capabilities;
-    std::vector<VkSurfaceFormatKHR> formats;
-    std::vector<VkPresentModeKHR> presentModes;
-  };
-
   VulkanDevice(Window &window);
   ~VulkanDevice();
 
@@ -35,24 +30,28 @@ public:
   VulkanDevice &operator=(const VulkanDevice &) = delete;
 
   VkInstance getInstance() const { return instance; }
+  VkPhysicalDevice getPhysicalDevice() const { return physicalDevice; }
+  VkDevice getDevice() const { return device; }
+  VkSurfaceKHR getSurface() const { return surface; }
+  Window &getWindow() { return window; }
 
 private:
   VkInstance instance;
   const std::vector<const char*> deviceExtensions = {
       VK_KHR_SWAPCHAIN_EXTENSION_NAME
   };
-  VkDebugUtilsMessengerEXT debugMessenger;
   VkSurfaceKHR surface;
   VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
   VkDevice device;
   VkQueue graphicsQueue;
   VkQueue presentQueue;
 
+  ValidationLayers validationLayers;
+
   Window &window;
 
   void initVulkan();
   void createInstance();
-  void setupDebugMessenger();
 
   void createSurface();
 
@@ -61,15 +60,7 @@ private:
   bool checkDeviceExtensionSupport(VkPhysicalDevice device);
   QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 
-  SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
-  VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
-  VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
-  VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
-
   void createLogicalDevice();
-
-  void populateDebugMessengerCreateInfo(
-      VkDebugUtilsMessengerCreateInfoEXT &createInfo);
 
   std::vector<const char *> getRequiredExtensions();
   bool checkExtensionSupport(
