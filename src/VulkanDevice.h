@@ -22,6 +22,12 @@ public:
     }
   };
 
+  struct SwapChainSupportDetails {
+    VkSurfaceCapabilitiesKHR capabilities;
+    std::vector<VkSurfaceFormatKHR> formats;
+    std::vector<VkPresentModeKHR> presentModes;
+  };
+
   VulkanDevice(Window &window);
   ~VulkanDevice();
 
@@ -54,6 +60,8 @@ private:
   int rateDeviceSuitability(VkPhysicalDevice device);
   bool checkDeviceExtensionSupport(VkPhysicalDevice device);
   QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
+
+  SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 
   void createLogicalDevice();
 

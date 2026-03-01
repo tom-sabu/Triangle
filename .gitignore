@@ -4,6 +4,8 @@ build-debug/
 build-release/
 build/
 
+temp/
+
 out/
 
 # CMake generated files

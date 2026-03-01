@@ -60,7 +60,6 @@ VulkanDevice::~VulkanDevice() {
   }
 }
 
-
 void VulkanDevice::initVulkan() {
   createInstance();
   setupDebugMessenger();
@@ -143,13 +142,11 @@ void VulkanDevice::setupDebugMessenger() {
   }
 }
 
-
 void VulkanDevice::createSurface() {
   if (glfwCreateWindowSurface(instance, window.getGLFWWindow(), nullptr, &surface) != VK_SUCCESS) {
     throw std::runtime_error("failed to create window surface!");
   }
 }
-
 
 void VulkanDevice::pickPhysicalDevice() {
   uint32_t deviceCount = 0;
@@ -197,8 +194,14 @@ int VulkanDevice::rateDeviceSuitability(VkPhysicalDevice device) {
   QueueFamilyIndices indices = findQueueFamilies(device);
 
   bool extensionsSupported = checkDeviceExtensionSupport(device);
+  bool swapChainAdequate = false;
 
-  if (!indices.isComplete() || !extensionsSupported) {
+  if (extensionsSupported) {
+    SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);
+    swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
+  }
+
+  if (!indices.isComplete() || !extensionsSupported || !swapChainAdequate) {
     return 0;
   }
 
@@ -252,6 +255,27 @@ VulkanDevice::QueueFamilyIndices VulkanDevice::findQueueFamilies(VkPhysicalDevic
   return indices;
 }
 
+VulkanDevice::SwapChainSupportDetails VulkanDevice::querySwapChainSupport(VkPhysicalDevice device) {
+  SwapChainSupportDetails details;
+
+  vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
+
+  uint32_t formatCount;
+  vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, nullptr);
+  if (formatCount != 0) {
+    details.formats.resize(formatCount);
+    vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, details.formats.data());
+  }
+
+  uint32_t presentModeCount;
+  vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, nullptr);
+  if (presentModeCount != 0) {
+    details.presentModes.resize(presentModeCount);
+    vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, details.presentModes.data());
+  }
+
+  return details;
+}
 
 void VulkanDevice::createLogicalDevice() {
 
@@ -296,8 +320,6 @@ void VulkanDevice::createLogicalDevice() {
 
 }
 
-
-
 void VulkanDevice::populateDebugMessengerCreateInfo(
     VkDebugUtilsMessengerCreateInfoEXT &createInfo) {
   createInfo = {};
@@ -311,7 +333,6 @@ void VulkanDevice::populateDebugMessengerCreateInfo(
   createInfo.pfnUserCallback = debugCallback;
   createInfo.pUserData = nullptr;
 }
-
 
 std::vector<const char *> VulkanDevice::getRequiredExtensions() {
   uint32_t glfwExtensionCount = 0;
