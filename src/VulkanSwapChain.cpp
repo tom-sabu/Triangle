@@ -1,7 +1,6 @@
 #include "VulkanSwapChain.h"
 #include "VulkanDevice.h"
 #include "Window.h"
-#include <stdexcept>
 #include <cstdint>
 #include <limits>
 #include <algorithm>
@@ -81,4 +80,12 @@ VkExtent2D VulkanSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& cap
 
     return actualExtent;
   }
+}
+
+void VulkanSwapChain::createSwapChain() {
+  SwapChainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice);
+
+  VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
+  VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
+  VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities);
 }

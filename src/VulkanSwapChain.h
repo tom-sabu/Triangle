@@ -27,6 +27,7 @@ public:
 
 private:
   VulkanDevice &device;
+  VulkanDevice &physicalDevice;
 
   VkSwapchainKHR swapChain;
   std::vector<VkImage> swapChainImages;

@@ -1,5 +1,4 @@
 #include "Window.h"
-#include <iostream>
 #include <stdexcept>
 
 Window::Window(int width, int height, const std::string &title)

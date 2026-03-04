@@ -1,7 +1,6 @@
 #include "Application.h"
 #include <cstdlib>
 #include <iostream>
-#include <stdexcept>
 
 int main() {
   try {

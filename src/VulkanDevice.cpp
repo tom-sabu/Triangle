@@ -1,5 +1,6 @@
 #include "VulkanDevice.h"
 #include "ValidationLayers.h"
+#include "VulkanSwapChain.h"
 #include "Window.h"
 #include <cstring>
 #include <iostream>
@@ -31,6 +32,7 @@ void VulkanDevice::initVulkan() {
   createSurface();
   pickPhysicalDevice();
   createLogicalDevice();
+  vulkanSwapChain.createSwapChain();
 }
 
 void VulkanDevice::createInstance() {
@@ -93,7 +95,6 @@ void VulkanDevice::createInstance() {
     throw std::runtime_error("Failed to create Vulkan instance!");
   }
 }
-
 
 void VulkanDevice::createSurface() {
   if (glfwCreateWindowSurface(instance, window.getGLFWWindow(), nullptr,
@@ -265,7 +266,6 @@ void VulkanDevice::createLogicalDevice() {
   vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
   vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
 }
-
 
 std::vector<const char *> VulkanDevice::getRequiredExtensions() {
   uint32_t glfwExtensionCount = 0;

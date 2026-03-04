@@ -7,6 +7,7 @@
 #include <vector>
 #include <optional>
 #include "ValidationLayers.h"
+#include "VulkanSwapChain.h"
 
 
 
@@ -47,6 +48,7 @@ private:
   VkQueue presentQueue;
 
   ValidationLayers validationLayers;
+  VulkanSwapChain vulkanSwapChain;
 
   Window &window;
 
