@@ -18,6 +18,8 @@ public:
   VulkanSwapChain(VulkanDevice &device);
   ~VulkanSwapChain();
 
+  void createSwapChain();
+
   VulkanSwapChain(const VulkanSwapChain &) = delete;
   VulkanSwapChain &operator=(const VulkanSwapChain &) = delete;
 
@@ -27,7 +29,6 @@ public:
 
 private:
   VulkanDevice &device;
-  VulkanDevice &physicalDevice;
 
   VkSwapchainKHR swapChain;
   std::vector<VkImage> swapChainImages;
@@ -35,7 +36,7 @@ private:
   VkExtent2D swapChainExtent;
   std::vector<VkImageView> swapChainImageViews;
 
-  void createSwapChain();
+
   void createImageViews();
 
   SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);

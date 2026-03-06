@@ -10,7 +10,7 @@
 #include <cstdint>
 
 VulkanDevice::VulkanDevice(Window &window)
-    : window(window), instance(VK_NULL_HANDLE) {
+    : window(window), instance(VK_NULL_HANDLE), vulkanSwapChain(*this) {
   initVulkan();
 }
 

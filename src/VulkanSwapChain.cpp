@@ -5,10 +5,7 @@
 #include <limits>
 #include <algorithm>
 
-VulkanSwapChain::VulkanSwapChain(VulkanDevice& device) : device(device) {
-  createSwapChain();
-  createImageViews();
-}
+VulkanSwapChain::VulkanSwapChain(VulkanDevice& device) : device(device) {}
 
 VulkanSwapChain::~VulkanSwapChain() {
   for (auto imageView : swapChainImageViews) {
@@ -83,7 +80,8 @@ VkExtent2D VulkanSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& cap
 }
 
 void VulkanSwapChain::createSwapChain() {
-  SwapChainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice);
+  SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device.getPhysicalDevice());
+
 
   VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
   VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
