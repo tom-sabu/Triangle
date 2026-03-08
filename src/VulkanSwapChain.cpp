@@ -4,14 +4,17 @@
 #include <cstdint>
 #include <limits>
 #include <algorithm>
+#include <stdexcept>
 
 VulkanSwapChain::VulkanSwapChain(VulkanDevice& device) : device(device) {}
 
 VulkanSwapChain::~VulkanSwapChain() {
-  for (auto imageView : swapChainImageViews) {
-    vkDestroyImageView(device.getDevice(), imageView, nullptr);
+  if (swapChain != VK_NULL_HANDLE) {
+    for (auto imageView : swapChainImageViews) {
+      vkDestroyImageView(device.getDevice(), imageView, nullptr);
+    }
+    vkDestroySwapchainKHR(device.getDevice(), swapChain, nullptr);
   }
-  vkDestroySwapchainKHR(device.getDevice(), swapChain, nullptr);
 }
 
 VulkanSwapChain::SwapChainSupportDetails
@@ -86,4 +89,51 @@ void VulkanSwapChain::createSwapChain() {
   VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
   VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
   VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities);
+
+  uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
+
+  if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
+    imageCount = swapChainSupport.capabilities.maxImageCount;
+  }
+
+  VkSwapchainCreateInfoKHR createInfo{};
+  createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+  createInfo.surface = device.getSurface();
+  createInfo.minImageCount = imageCount;
+  createInfo.imageFormat = surfaceFormat.format;
+  createInfo.imageColorSpace = surfaceFormat.colorSpace;
+  createInfo.imageExtent = extent;
+  createInfo.imageArrayLayers = 1;
+  createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+  VulkanDevice::QueueFamilyIndices indices = device.findQueueFamilies(device.getPhysicalDevice());
+  uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+
+  if (indices.graphicsFamily != indices.presentFamily) {
+    createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+    createInfo.queueFamilyIndexCount = 2;
+    createInfo.pQueueFamilyIndices = queueFamilyIndices;
+  } else {
+    createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    createInfo.queueFamilyIndexCount = 0;
+    createInfo.pQueueFamilyIndices = nullptr;
+  }
+  createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
+  createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+  createInfo.presentMode = presentMode;
+  createInfo.clipped = VK_TRUE;
+  createInfo.oldSwapchain = VK_NULL_HANDLE;
+
+  if (vkCreateSwapchainKHR(device.getDevice(), &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
+    throw std::runtime_error("failed to create swap chain!");
+  }
+}
+
+void VulkanSwapChain::cleanup() {
+  for (auto imageView : swapChainImageViews) {
+    vkDestroyImageView(device.getDevice(), imageView, nullptr);
+  }
+  swapChainImageViews.clear();
+  vkDestroySwapchainKHR(device.getDevice(), swapChain, nullptr);
+  swapChain = VK_NULL_HANDLE;
 }

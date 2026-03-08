@@ -19,6 +19,7 @@ public:
   ~VulkanSwapChain();
 
   void createSwapChain();
+  void cleanup();
 
   VulkanSwapChain(const VulkanSwapChain &) = delete;
   VulkanSwapChain &operator=(const VulkanSwapChain &) = delete;

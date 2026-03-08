@@ -15,6 +15,8 @@ VulkanDevice::VulkanDevice(Window &window)
 }
 
 VulkanDevice::~VulkanDevice() {
+  vulkanSwapChain.cleanup();
+
   vkDestroyDevice(device, nullptr);
 
   validationLayers.cleanup(instance);

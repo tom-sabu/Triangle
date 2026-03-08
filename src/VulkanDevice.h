@@ -27,6 +27,8 @@ public:
   VulkanDevice(Window &window);
   ~VulkanDevice();
 
+  QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
+
   VulkanDevice(const VulkanDevice &) = delete;
   VulkanDevice &operator=(const VulkanDevice &) = delete;
 
@@ -60,7 +62,6 @@ private:
   void pickPhysicalDevice();
   int rateDeviceSuitability(VkPhysicalDevice device);
   bool checkDeviceExtensionSupport(VkPhysicalDevice device);
-  QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 
   void createLogicalDevice();
 
