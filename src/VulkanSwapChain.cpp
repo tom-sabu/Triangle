@@ -127,6 +127,13 @@ void VulkanSwapChain::createSwapChain() {
   if (vkCreateSwapchainKHR(device.getDevice(), &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
     throw std::runtime_error("failed to create swap chain!");
   }
+
+  vkGetSwapchainImagesKHR(device.getDevice(), swapChain, &imageCount, nullptr);
+  swapChainImages.resize(imageCount);
+  vkGetSwapchainImagesKHR(device.getDevice(), swapChain, &imageCount, swapChainImages.data());
+
+  swapChainImageFormat = surfaceFormat.format;
+  swapChainExtent = extent;
 }
 
 void VulkanSwapChain::cleanup() {
