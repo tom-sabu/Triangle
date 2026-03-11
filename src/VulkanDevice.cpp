@@ -35,6 +35,7 @@ void VulkanDevice::initVulkan() {
   pickPhysicalDevice();
   createLogicalDevice();
   vulkanSwapChain.createSwapChain();
+  vulkanSwapChain.createImageViews();
 }
 
 void VulkanDevice::createInstance() {

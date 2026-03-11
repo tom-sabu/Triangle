@@ -19,6 +19,7 @@ public:
   ~VulkanSwapChain();
 
   void createSwapChain();
+  void createImageViews();
   void cleanup();
 
   VulkanSwapChain(const VulkanSwapChain &) = delete;
@@ -36,9 +37,6 @@ private:
   VkFormat swapChainImageFormat;
   VkExtent2D swapChainExtent;
   std::vector<VkImageView> swapChainImageViews;
-
-
-  void createImageViews();
 
   SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
   VkSurfaceFormatKHR chooseSwapSurfaceFormat(
