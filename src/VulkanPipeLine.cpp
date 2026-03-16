@@ -1,10 +1,31 @@
 #include "VulkanPipeLine.h"
+#include <fstream>
+#include <vector>
+
+VulkanPipeLine::VulkanPipeLine(VulkanDevice &device,
+                               const std::string &vertFilepath,
+                               const std::string &fragFilepath)
+    : device{device}, vertFilepath(vertFilepath), fragFilepath(fragFilepath) {}
+
+static std::vector<char> readFile(const std::string &filename) {
+  std::ifstream file(filename, std::ios::ate | std::ios::binary);
+
+  if (!file.is_open()) {
+    throw std::runtime_error("failed to open file!");
+  }
+
+  size_t fileSize = (size_t)file.tellg();
+  std::vector<char> buffer(fileSize);
+
+  file.seekg(0);
+  file.read(buffer.data(), fileSize);
+
+  file.close();
+
+  return buffer;
+}
 
 void VulkanPipeLine::createGraphicsPipeline() {
-  vec2 positions[3] = vec2[](
-    vec2(0.0, -0.5),
-    vec2(0.5, 0.5),
-    vec2(-0.5, 0.5),
-  )
-  gl_Position = vec4(positions[gl_VertexIndex], 0.0, 1.0);
+  auto vertShaderCode = readFile("Shaders/vert.spv");
+  auto fragShaderCode = readFile("Shaders/frag.spv");
 }
