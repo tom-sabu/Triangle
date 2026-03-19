@@ -44,6 +44,9 @@ void VulkanPipeLine::createGraphicsPipeline() {
   fragShaderStageInfo.pName = "main";
 
   VkPipelineShaderStageCreateInfo shaderStages[] = {vertShaderStageInfo, fragShaderStageInfo};
+
+  vkDestroyShaderModule(device.getDevice(), fragShaderModule, nullptr);
+  vkDestroyShaderModule(device.getDevice(), vertShaderModule, nullptr);
 }
 
 VkShaderModule VulkanPipeLine::createShaderModule(const std::vector<char>& code) {
