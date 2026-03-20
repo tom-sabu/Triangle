@@ -8,6 +8,7 @@
 #include <optional>
 #include "ValidationLayers.h"
 #include "VulkanSwapChain.h"
+#include "VulkanPipeLine.h"
 
 
 
@@ -37,6 +38,7 @@ public:
   VkDevice getDevice() const { return device; }
   VkSurfaceKHR getSurface() const { return surface; }
   Window &getWindow() { return window; }
+  VulkanSwapChain &getSwapChain() { return vulkanSwapChain; }
 
 private:
   VkInstance instance;
@@ -51,6 +53,7 @@ private:
 
   ValidationLayers validationLayers;
   VulkanSwapChain vulkanSwapChain;
+  VulkanPipeLine vulkanPipeLine;
 
   Window &window;
 

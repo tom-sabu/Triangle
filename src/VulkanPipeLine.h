@@ -1,24 +1,25 @@
 #ifndef VULKAN_PIPE_LINE_H
 #define VULKAN_PIPE_LINE_H
 
-#include "VulkanDevice.h"
+class VulkanDevice;
 #include <string>
 #include <vector>
+#include <vulkan/vulkan.h>
 
 class VulkanPipeLine {
 public:
 
-  VulkanPipeLine(VulkanDevice &device, const std::string& vertFilepath, const std::string& fragFilepath); 
+  VulkanPipeLine(VulkanDevice &device); 
 
   void createGraphicsPipeline();
+  void cleanup();
 
 private:
 
   VkShaderModule createShaderModule(const std::vector<char>& code);
 
   VulkanDevice &device;
-  std::string vertFilepath;
-  std::string fragFilepath;
+  VkPipelineLayout pipelineLayout;
 };
 
 #endif

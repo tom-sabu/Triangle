@@ -10,11 +10,12 @@
 #include <cstdint>
 
 VulkanDevice::VulkanDevice(Window &window)
-    : window(window), instance(VK_NULL_HANDLE), vulkanSwapChain(*this) {
+    : window(window), instance(VK_NULL_HANDLE), vulkanSwapChain(*this), vulkanPipeLine(*this) {
   initVulkan();
 }
 
 VulkanDevice::~VulkanDevice() {
+  vulkanPipeLine.cleanup();
   vulkanSwapChain.cleanup();
 
   vkDestroyDevice(device, nullptr);
@@ -36,6 +37,7 @@ void VulkanDevice::initVulkan() {
   createLogicalDevice();
   vulkanSwapChain.createSwapChain();
   vulkanSwapChain.createImageViews();
+  vulkanPipeLine.createGraphicsPipeline();
 }
 
 void VulkanDevice::createInstance() {
