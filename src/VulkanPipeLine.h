@@ -12,6 +12,7 @@ public:
   VulkanPipeLine(VulkanDevice &device); 
 
   void createGraphicsPipeline();
+  void createRenderPass();
   void cleanup();
 
 private:
@@ -19,6 +20,7 @@ private:
   VkShaderModule createShaderModule(const std::vector<char>& code);
 
   VulkanDevice &device;
+  VkRenderPass renderPass;
   VkPipelineLayout pipelineLayout;
 };
 
