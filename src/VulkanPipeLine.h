@@ -22,6 +22,7 @@ private:
   VulkanDevice &device;
   VkRenderPass renderPass;
   VkPipelineLayout pipelineLayout;
+  VkPipeline graphicsPipeline;
 };
 
 #endif

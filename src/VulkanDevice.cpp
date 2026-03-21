@@ -37,8 +37,8 @@ void VulkanDevice::initVulkan() {
   createLogicalDevice();
   vulkanSwapChain.createSwapChain();
   vulkanSwapChain.createImageViews();
-  vulkanPipeLine.createGraphicsPipeline();
   vulkanPipeLine.createRenderPass();
+  vulkanPipeLine.createGraphicsPipeline();
 }
 
 void VulkanDevice::createInstance() {

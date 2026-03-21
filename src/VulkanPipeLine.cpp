@@ -5,7 +5,7 @@
 #include <vulkan/vulkan_core.h>
 
 VulkanPipeLine::VulkanPipeLine(VulkanDevice &device)
-    : device{device} {}
+    : device{device}, renderPass{VK_NULL_HANDLE}, pipelineLayout{VK_NULL_HANDLE}, graphicsPipeline{VK_NULL_HANDLE} {}
 
 static std::vector<char> readFile(const std::string &filename) {
   std::ifstream file(filename, std::ios::ate | std::ios::binary);
@@ -86,6 +86,7 @@ void VulkanPipeLine::createGraphicsPipeline() {
   viewportState.pViewports = &viewport;
   viewportState.scissorCount = 1;
   viewportState.pScissors = &scissor;
+  
   VkPipelineRasterizationStateCreateInfo rasterizer{};
   rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
   rasterizer.depthClampEnable = VK_FALSE;
@@ -141,6 +142,28 @@ void VulkanPipeLine::createGraphicsPipeline() {
     throw std::runtime_error("failed to create pipeline layout!");
   }
 
+  VkGraphicsPipelineCreateInfo pipelineInfo{};
+  pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+  pipelineInfo.stageCount = 2;
+  pipelineInfo.pStages = shaderStages;
+  pipelineInfo.pVertexInputState = &vertexInputInfo;
+  pipelineInfo.pInputAssemblyState = &inputAssembly;
+  pipelineInfo.pViewportState = &viewportState;
+  pipelineInfo.pRasterizationState = &rasterizer;
+  pipelineInfo.pMultisampleState = &multisampling;
+  pipelineInfo.pDepthStencilState = nullptr;
+  pipelineInfo.pColorBlendState = &colorBlending;
+  pipelineInfo.pDynamicState = &dynamicState;
+  pipelineInfo.layout = pipelineLayout;
+  pipelineInfo.renderPass = renderPass;
+  pipelineInfo.subpass = 0;
+  pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+  pipelineInfo.basePipelineIndex = -1;
+
+  if (vkCreateGraphicsPipelines(device.getDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
+    throw std::runtime_error("failed to create graphics pipeline!");
+  }
+
   vkDestroyShaderModule(device.getDevice(), fragShaderModule, nullptr);
   vkDestroyShaderModule(device.getDevice(), vertShaderModule, nullptr);
 }
@@ -192,6 +215,7 @@ void VulkanPipeLine::createRenderPass() {
 }
 
 void VulkanPipeLine::cleanup() {
+  vkDestroyPipeline(device.getDevice(), graphicsPipeline, nullptr);
   vkDestroyPipelineLayout(device.getDevice(), pipelineLayout, nullptr);
   vkDestroyRenderPass(device.getDevice(), renderPass, nullptr);
 }
