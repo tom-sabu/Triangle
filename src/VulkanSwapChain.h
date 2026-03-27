@@ -28,6 +28,7 @@ public:
   VkSwapchainKHR getSwapChain() const { return swapChain; }
   VkFormat getSwapChainImageFormat() const { return swapChainImageFormat; }
   VkExtent2D getSwapChainExtent() const { return swapChainExtent; }
+  std::vector<VkImageView> getSwapChainImageViews() const { return swapChainImageViews; }
 
 private:
   VulkanDevice &device;

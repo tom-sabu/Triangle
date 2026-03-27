@@ -10,11 +10,12 @@
 #include <cstdint>
 
 VulkanDevice::VulkanDevice(Window &window)
-    : window(window), instance(VK_NULL_HANDLE), vulkanSwapChain(*this), vulkanPipeLine(*this) {
+    : window(window), instance(VK_NULL_HANDLE), vulkanSwapChain(*this), vulkanPipeLine(*this), vulkanRenderer(*this) {
   initVulkan();
 }
 
 VulkanDevice::~VulkanDevice() {
+  vulkanRenderer.cleanup();
   vulkanPipeLine.cleanup();
   vulkanSwapChain.cleanup();
 
@@ -39,6 +40,7 @@ void VulkanDevice::initVulkan() {
   vulkanSwapChain.createImageViews();
   vulkanPipeLine.createRenderPass();
   vulkanPipeLine.createGraphicsPipeline();
+  vulkanRenderer.createFramebuffers();
 }
 
 void VulkanDevice::createInstance() {

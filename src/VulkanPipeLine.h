@@ -15,6 +15,8 @@ public:
   void createRenderPass();
   void cleanup();
 
+  VkRenderPass getRenderPass() const { return renderPass; }
+
 private:
 
   VkShaderModule createShaderModule(const std::vector<char>& code);
