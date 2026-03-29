@@ -16,6 +16,7 @@ public:
   void cleanup();
 
   VkRenderPass getRenderPass() const { return renderPass; }
+  VkPipeline getGraphicsPipeline() const { return graphicsPipeline; }
 
 private:
 
