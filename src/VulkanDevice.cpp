@@ -36,11 +36,16 @@ void VulkanDevice::initVulkan() {
   createSurface();
   pickPhysicalDevice();
   createLogicalDevice();
+
   vulkanSwapChain.createSwapChain();
   vulkanSwapChain.createImageViews();
+
   vulkanPipeLine.createRenderPass();
   vulkanPipeLine.createGraphicsPipeline();
+
   vulkanRenderer.createFramebuffers();
+  vulkanRenderer.createCommandPool();
+  vulkanRenderer.createCommandBuffer();
 }
 
 void VulkanDevice::createInstance() {

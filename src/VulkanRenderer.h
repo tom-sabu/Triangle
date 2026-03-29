@@ -13,11 +13,16 @@ public:
   VulkanRenderer(VulkanDevice &device);
 
   void createFramebuffers();
+  void createCommandPool();
+  void createCommandBuffer();
+  void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
   void cleanup();
 
 private:
   VulkanDevice &device;
 
+  VkCommandPool commandPool;
+  VkCommandBuffer commandBuffer;
   std::vector<VkImageView> swapChainImageViews;
   std::vector<VkFramebuffer> swapChainFramebuffers;
 };
