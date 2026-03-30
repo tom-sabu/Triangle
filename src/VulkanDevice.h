@@ -41,6 +41,7 @@ public:
   Window &getWindow() { return window; }
   VulkanSwapChain &getSwapChain() { return vulkanSwapChain; }
   VulkanPipeLine &getPipeLine() { return vulkanPipeLine; }
+  VulkanRenderer &getRenderer() { return vulkanRenderer; }
 
 private:
   VkInstance instance;

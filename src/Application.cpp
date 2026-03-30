@@ -15,6 +15,7 @@ void Application::mainLoop() {
 
   while (!window->shouldClose()) {
     window->pollEvents();
+    device->getRenderer().drawFrame();
   }
 
   std::cout << "Window closed." << std::endl;

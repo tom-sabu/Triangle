@@ -16,6 +16,8 @@ public:
   void createCommandPool();
   void createCommandBuffer();
   void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+  void createSyncObjects();
+  void drawFrame();
   void cleanup();
 
 private:
@@ -25,6 +27,9 @@ private:
   VkCommandBuffer commandBuffer;
   std::vector<VkImageView> swapChainImageViews;
   std::vector<VkFramebuffer> swapChainFramebuffers;
+  VkSemaphore imageAvailabeSemaphore;
+  VkSemaphore renderFinishedSemaphore;
+  VkFence inFlightFence;
 };
 
 #endif

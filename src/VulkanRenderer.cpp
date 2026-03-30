@@ -9,9 +9,7 @@ void VulkanRenderer::createFramebuffers() {
   swapChainFramebuffers.resize(swapChainImageViews.size());
 
   for (size_t i = 0; i < swapChainImageViews.size(); i++) {
-    VkImageView attachments[] = {
-      swapChainImageViews[i]
-    };
+    VkImageView attachments[] = {swapChainImageViews[i]};
 
     VkFramebufferCreateInfo framebufferInfo{};
     framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -22,23 +20,25 @@ void VulkanRenderer::createFramebuffers() {
     framebufferInfo.height = device.getSwapChain().getSwapChainExtent().height;
     framebufferInfo.layers = 1;
 
-    if (vkCreateFramebuffer(device.getDevice(), &framebufferInfo, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS) {
+    if (vkCreateFramebuffer(device.getDevice(), &framebufferInfo, nullptr,
+                            &swapChainFramebuffers[i]) != VK_SUCCESS) {
       throw std::runtime_error("failed to create framebuffer!");
     }
   }
 }
 
 void VulkanRenderer::createCommandPool() {
-  VulkanDevice::QueueFamilyIndices queueFamilyIndices = device.findQueueFamilies(device.getPhysicalDevice()); 
+  VulkanDevice::QueueFamilyIndices queueFamilyIndices =
+      device.findQueueFamilies(device.getPhysicalDevice());
   VkCommandPoolCreateInfo poolInfo{};
   poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
   poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
   poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
 
-  if (vkCreateCommandPool(device.getDevice(), &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
+  if (vkCreateCommandPool(device.getDevice(), &poolInfo, nullptr,
+                          &commandPool) != VK_SUCCESS) {
     throw std::runtime_error("failed to create command pool!");
   }
-
 }
 
 void VulkanRenderer::createCommandBuffer() {
@@ -48,13 +48,14 @@ void VulkanRenderer::createCommandBuffer() {
   allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
   allocInfo.commandBufferCount = 1;
 
-  if (vkAllocateCommandBuffers(device.getDevice(), &allocInfo, &commandBuffer) != VK_SUCCESS) {
+  if (vkAllocateCommandBuffers(device.getDevice(), &allocInfo,
+                               &commandBuffer) != VK_SUCCESS) {
     throw std::runtime_error("failed to allocate command buffers!");
   }
-
 }
 
-void VulkanRenderer::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) {
+void VulkanRenderer::recordCommandBuffer(VkCommandBuffer commandBuffer,
+                                         uint32_t imageIndex) {
   VkCommandBufferBeginInfo beginInfo{};
   beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
   beginInfo.flags = 0;
@@ -65,7 +66,7 @@ void VulkanRenderer::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t
   }
 
   VkRenderPassBeginInfo renderPassInfo{};
-  renderPassInfo.sType =  VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+  renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
   renderPassInfo.renderPass = device.getPipeLine().getRenderPass();
   renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
   renderPassInfo.renderArea.offset = {0, 0};
@@ -75,18 +76,22 @@ void VulkanRenderer::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t
   renderPassInfo.clearValueCount = 1;
   renderPassInfo.pClearValues = &clearColor;
 
-  vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-  vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, device.getPipeLine().getGraphicsPipeline());
+  vkCmdBeginRenderPass(commandBuffer, &renderPassInfo,
+                       VK_SUBPASS_CONTENTS_INLINE);
+  vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+                    device.getPipeLine().getGraphicsPipeline());
 
   VkViewport viewport{};
-  viewport.x = 0.0f; 
-  viewport.y = 0.0f; 
-  viewport.width = static_cast<float>(device.getSwapChain().getSwapChainExtent().width);
-  viewport.height = static_cast<float>(device.getSwapChain().getSwapChainExtent().height);
+  viewport.x = 0.0f;
+  viewport.y = 0.0f;
+  viewport.width =
+      static_cast<float>(device.getSwapChain().getSwapChainExtent().width);
+  viewport.height =
+      static_cast<float>(device.getSwapChain().getSwapChainExtent().height);
   viewport.minDepth = 0.0f;
   viewport.maxDepth = 1.0f;
   vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
-  
+
   VkRect2D scissor{};
   scissor.offset = {0, 0};
   scissor.extent = device.getSwapChain().getSwapChainExtent();
@@ -95,12 +100,34 @@ void VulkanRenderer::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t
   vkCmdDraw(commandBuffer, 3, 1, 0, 0);
   vkCmdEndRendering(commandBuffer);
 
-  if (vkEndCommandBuffer (commandBuffer) != VK_SUCCESS) {
+  if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
     throw std::runtime_error("failed to record command buffer!");
   }
 }
 
+void VulkanRenderer::drawFrame() {}
+
+void VulkanRenderer::createSyncObjects() {
+  VkSemaphoreCreateInfo semaphoreInfo{};
+  semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+  VkFenceCreateInfo fenceInfo{};
+  fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+
+  if (vkCreateSemaphore(device.getDevice(), &semaphoreInfo, nullptr,
+                        &imageAvailabeSemaphore) != VK_SUCCESS ||
+      vkCreateSemaphore(device.getDevice(), &semaphoreInfo, nullptr,
+                        &renderFinishedSemaphore) != VK_SUCCESS ||
+      vkCreateFence(device.getDevice(), &fenceInfo, nullptr, &inFlightFence) !=
+          VK_SUCCESS) {
+    throw std::runtime_error("failed to create semaphore!");
+  }
+}
+
 void VulkanRenderer::cleanup() {
+  vkDestroySemaphore(device.getDevice(), imageAvailabeSemaphore, nullptr);
+  vkDestroySemaphore(device.getDevice(), renderFinishedSemaphore, nullptr);
+  vkDestroyFence(device.getDevice(), inFlightFence, nullptr);
   vkDestroyCommandPool(device.getDevice(), commandPool, nullptr);
   for (auto framebuffer : swapChainFramebuffers) {
     vkDestroyFramebuffer(device.getDevice(), framebuffer, nullptr);

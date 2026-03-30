@@ -46,6 +46,7 @@ void VulkanDevice::initVulkan() {
   vulkanRenderer.createFramebuffers();
   vulkanRenderer.createCommandPool();
   vulkanRenderer.createCommandBuffer();
+  vulkanRenderer.createSyncObjects();
 }
 
 void VulkanDevice::createInstance() {
