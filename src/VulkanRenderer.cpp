@@ -98,7 +98,7 @@ void VulkanRenderer::recordCommandBuffer(VkCommandBuffer commandBuffer,
   vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
   vkCmdDraw(commandBuffer, 3, 1, 0, 0);
-  vkCmdEndRendering(commandBuffer);
+  vkCmdEndRenderPass(commandBuffer);
 
   if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
     throw std::runtime_error("failed to record command buffer!");
@@ -128,7 +128,7 @@ void VulkanRenderer::drawFrame() {
   vkResetFences(device.getDevice(), 1, &inFlightFence);
 
   uint32_t imageIndex;
-  vkAcquireNextImageKHR(device.getDevice(), device.getSwapChain().getSwapChain(), imageAvailabeSemaphore, VK_NULL_HANDLE, &imageIndex);
+  vkAcquireNextImageKHR(device.getDevice(), device.getSwapChain().getSwapChain(),UINT64_MAX, imageAvailabeSemaphore, VK_NULL_HANDLE, &imageIndex);
   vkResetCommandBuffer(commandBuffer, 0);
   recordCommandBuffer(commandBuffer, imageIndex);
 
@@ -150,6 +150,21 @@ void VulkanRenderer::drawFrame() {
   if (vkQueueSubmit(device.getGraphicsQueue(), 1, &submitInfo, inFlightFence) != VK_SUCCESS) {
     throw std::runtime_error("failed to submit draw command buffer!");
   }
+
+  VkPresentInfoKHR presentInfo{};
+  presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+
+  presentInfo.waitSemaphoreCount = 1;
+  presentInfo.pWaitSemaphores = signalSemaphores;
+
+  VkSwapchainKHR swapChains[] = {device.getSwapChain().getSwapChain()};
+  presentInfo.swapchainCount = 1;
+  presentInfo.pSwapchains = swapChains;
+  presentInfo.pImageIndices = &imageIndex;
+
+  presentInfo.pResults = nullptr;
+
+  vkQueuePresentKHR(device.getPresentQueue(), &presentInfo);
 }
 
 void VulkanRenderer::cleanup() {

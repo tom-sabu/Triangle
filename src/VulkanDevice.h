@@ -43,6 +43,7 @@ public:
   VulkanSwapChain &getSwapChain() { return vulkanSwapChain; }
   VulkanPipeLine &getPipeLine() { return vulkanPipeLine; }
   VulkanRenderer &getRenderer() { return vulkanRenderer; }
+  VkQueue &getPresentQueue() { return presentQueue; }
 
 private:
   VkInstance instance;
