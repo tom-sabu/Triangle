@@ -21,7 +21,7 @@ public:
     std::optional<uint32_t> graphicsFamily;
     std::optional<uint32_t> presentFamily;
 
-    bool isComplete() {
+    bool isComplete(){
       return graphicsFamily.has_value() && presentFamily.has_value();
     }
   };
@@ -37,6 +37,7 @@ public:
   VkInstance getInstance() const { return instance; }
   VkPhysicalDevice getPhysicalDevice() const { return physicalDevice; }
   VkDevice getDevice() const { return device; }
+  VkQueue getGraphicsQueue() const { return graphicsQueue; }
   VkSurfaceKHR getSurface() const { return surface; }
   Window &getWindow() { return window; }
   VulkanSwapChain &getSwapChain() { return vulkanSwapChain; }
